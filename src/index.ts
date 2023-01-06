@@ -1,3 +1,4 @@
+import clone from "just-clone";
 type MapInputType<T, K> = Map<T, K>;
 type ArrayInputType<T, K> = [T, K][];
 type ConstructorParamType<T, K> =
@@ -37,7 +38,9 @@ export class ImmutableMap<T, K> {
    * Returnes a copy of an specified element from an ImmutableMap.
    */
   get = (key: T) => {
-    const copy: K = structuredClone(this.data.get(key)) as K;
+    const el = this.data.get(key);
+    if (!el) return undefined;
+    const copy: K = clone(el) as K;
     return copy;
   };
   /**
@@ -93,7 +96,7 @@ export class ImmutableMap<T, K> {
     const keys = this.keys();
     let i = 0;
     for (const key of keys) {
-      callback(this.get(key), key, i);
+      callback(this.get(key) as K, key, i);
       i++;
     }
   };
